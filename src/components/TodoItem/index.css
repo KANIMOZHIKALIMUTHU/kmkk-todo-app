@@ -1,0 +1,57 @@
+/* src/components/TodoItem.css */
+.todo-item {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    position: relative;
+    transition: background-color 0.3s ease;
+  }
+  
+  .todo-item.completed {
+    background-color: #d4edda;
+    text-decoration: line-through;
+    color: #155724;
+  }
+  
+  .todo-item-content {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .todo-item-labels {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap; /* Allow labels to wrap onto the next line */
+  }
+  
+  .label {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: white;
+    margin-right: 5px;
+    margin-bottom: 5px; /* Ensure labels have space below them */
+  }
+  
+  .label-urgent { background-color: #dc3545; }
+  .label-work { background-color: #007bff; }
+  .label-personal { background-color: #28a745; }
+  .label-professional { background-color: #a7289a; }
+  .label-low-priority { background-color: #ffc107; }
+  
+  .todo-item button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .todo-item button:hover {
+    background-color: #c82333;
+  }
+  

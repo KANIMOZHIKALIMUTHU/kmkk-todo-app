@@ -1,0 +1,40 @@
+/* src/components/HomePage.css */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .home-page-header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .home-page-main {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .task-manager {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label-manager-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .home-page-footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #dee2e6;
+  }
+  

@@ -1,0 +1,20 @@
+/* src/components/TodoList.css */
+.todo-list {
+    margin-top: 20px;
+  }
+  
+  .todo-list select {
+    margin-right: 10px;
+  }
+  
+  .todo-list .list-group-item {
+    background: #ffffff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .todo-list .list-group-item:hover {
+    background-color: #f1f1f1;
+  }
+  
