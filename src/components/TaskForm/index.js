@@ -3,115 +3,137 @@ import React, { Component } from 'react';
 import './index.css';
 
 class TaskForm extends Component {
-  state = {
-    id: null,
-    description: '',
-    labels: [],
-    newLabel: '',
-    searchQuery: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      description: props.task ? props.task.description : '',
+      labels: props.task ? props.task.labels : [],
+      newLabel: '',
+      searchQuery: '',
+      availableLabels: props.labels || [], 
+      editing: !!props.task,
+      taskId: props.task ? props.task.id : null,
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.task !== this.props.task || prevProps.labels !== this.props.labels) {
+      this.setState({
+        description: this.props.task ? this.props.task.description : '',
+        labels: this.props.task ? this.props.task.labels : [],
+        availableLabels: this.props.labels || [], // Update available labels
+        editing: !!this.props.task,
+        taskId: this.props.task ? this.props.task.id : null,
+      });
+    }
+  }
 
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
-  };
+  }
 
   handleLabelChange = (e) => {
-    const label = e.target.value;
-    this.setState(prevState => ({
-      labels: prevState.labels.includes(label)
-        ? prevState.labels.filter(l => l !== label)
-        : [...prevState.labels, label]
-    }));
-  };
-
-  handleNewLabelChange = (e) => {
     this.setState({ newLabel: e.target.value });
-  };
+  }
 
-  handleNewLabelSubmit = (e) => {
-    e.preventDefault();
-    const { newLabel } = this.state;
-    if (newLabel && !this.props.labels.find(label => label.name === newLabel)) {
-      const label = { id: Date.now(), name: newLabel };
-      this.props.addLabel(label);
-      this.setState(prevState => ({
-        labels: [...prevState.labels, newLabel],
+  addLabel = () => {
+    const { newLabel, labels, availableLabels } = this.state;
+    if (newLabel && !availableLabels.includes(newLabel)) {
+      this.setState({
+        availableLabels: [...availableLabels, newLabel],
+        labels: [...labels, newLabel],
         newLabel: ''
-      }));
+      });
     }
-  };
-
-  handleSearchChange = (e) => {
-    this.setState({ searchQuery: e.target.value });
-  };
+  }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { id, description, labels } = this.state;
-    const task = { id: id || Date.now(), description, labels, completed: false };
-    if (this.state.isEditing) {
-      this.props.updateTask(task);
+    const { description, labels, editing, taskId } = this.state;
+    const task = { description, labels };
+
+    if (editing) {
+      this.props.updateTask(taskId, task);
     } else {
       this.props.addTask(task);
     }
-    this.setState({ id: null, description: '', labels: [] });
-  };
+
+    this.setState({ description: '', labels: [], editing: false, taskId: null });
+  }
+
+  filterLabels = () => {
+    const { searchQuery, availableLabels } = this.state;
+    return availableLabels.filter(label => label.toLowerCase().includes(searchQuery.toLowerCase()));
+  }
 
   render() {
-    const { labels } = this.props;
-    const { searchQuery } = this.state;
-    const filteredLabels = labels.filter(label =>
-      label.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const { description, labels, newLabel, searchQuery } = this.state;
+    const filteredLabels = this.filterLabels();
 
     return (
-      <form onSubmit={this.handleSubmit} className="task-form">
-        <div className="form-group">
+      <div className="task-form">
+        <h2>{this.state.editing ? 'Edit Task' : 'Add New Task'}</h2>
+        <form onSubmit={this.handleSubmit}>
           <input
             type="text"
             name="description"
-            value={this.state.description}
+            value={description}
             onChange={this.handleChange}
-            placeholder="Task description"
-            className="form-control"
+            placeholder="Task Description"
             required
           />
-        </div>
-        <div className="form-group">
+          <input
+            type="text"
+            value={newLabel}
+            onChange={this.handleLabelChange}
+            placeholder="Add New Label"
+          />
+          <button type="button" onClick={this.addLabel}>Add Label</button>
           <input
             type="text"
             value={searchQuery}
-            onChange={this.handleSearchChange}
-            placeholder="Search labels..."
-            className="form-control"
+            onChange={(e) => this.setState({ searchQuery: e.target.value })}
+            placeholder="Search Labels"
           />
-          {filteredLabels.map(label => (
-            <div className="form-check-inline" key={label.id}>
-              <input
-                type="checkbox"
-                value={label.name}
-                checked={this.state.labels.includes(label.name)}
-                onChange={this.handleLabelChange}
-                className="form-check-input"
-              />
-              <label className="form-check-label">{label.name}</label>
-            </div>
-          ))}
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            value={this.state.newLabel}
-            onChange={this.handleNewLabelChange}
-            placeholder="New Label"
-            className="form-control"
-          />
-          <button onClick={this.handleNewLabelSubmit} className="btn btn-secondary">
-            Add New Label
+          <div className="labels">
+            {filteredLabels.map((label, index) => (
+              <span
+                key={index}
+                className={`label ${label.toLowerCase()}`}
+                onClick={() => this.setState({
+                  labels: [...labels, label],
+                  searchQuery: ''
+                })}
+              >
+                {label}
+              </span>
+            ))}
+            {newLabel && !filteredLabels.includes(newLabel) && (
+              <span
+                className="label new-label"
+                onClick={() => this.setState({
+                  labels: [...labels, newLabel],
+                  availableLabels: [...this.state.availableLabels, newLabel],
+                  newLabel: '',
+                  searchQuery: ''
+                })}
+              >
+                {newLabel}
+              </span>
+            )}
+          </div>
+          <div className="selected-labels">
+            {labels.map((label, index) => (
+              <span key={index} className={`label ${label.toLowerCase()}`}>
+                {label}
+              </span>
+            ))}
+          </div>
+          <button type="submit">
+            {this.state.editing ? 'Update Task' : 'Add Task'}
           </button>
-        </div>
-        <button type="submit" className="btn btn-primary">Save Task</button>
-      </form>
+        </form>
+      </div>
     );
   }
 }

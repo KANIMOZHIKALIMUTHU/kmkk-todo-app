@@ -2,28 +2,37 @@
 import React from 'react';
 import './index.css';
 
-const TodoItem = ({ task, updateTask, deleteTask }) => {
-  const handleComplete = () => {
-    updateTask({ ...task, completed: !task.completed });
-  };
-
-  const handleDelete = () => {
-    deleteTask(task.id);
-  };
-
+const TodoItem = ({ task, updateTask, deleteTask, onEdit }) => {
   return (
-    <div className={`todo-item ${task.completed ? 'completed' : ''}`}>
-      <div className="todo-item-content" onClick={handleComplete}>
-        <h4>{task.description}</h4>
-        <div className="todo-item-labels">
-          {task.labels.map(label => (
-            <span key={label} className={`label label-${label.toLowerCase().replace(/\s+/g, '-')}`}>
-              {label}
-            </span>
-          ))}
-        </div>
+    <div className="todo-item">
+      <p className={task.completed ? 'completed' : ''}>{task.description}</p>
+      <div className="labels">
+        {task.labels.map((label, index) => (
+          <span key={index} className={`label ${label.toLowerCase()}`}>
+            {label}
+          </span>
+        ))}
       </div>
-      <button onClick={handleDelete} className="btn btn-danger btn-sm">Delete</button>
+      <div className="todo-item-buttons">
+        <button
+          className="edit-button"
+          onClick={() => onEdit(task)}
+        >
+          Edit
+        </button>
+        <button
+          className="complete-button"
+          onClick={() => updateTask(task.id, { ...task, completed: !task.completed })}
+        >
+          {task.completed ? 'Undo' : 'Complete'}
+        </button>
+        <button
+          className="delete-button"
+          onClick={() => deleteTask(task.id)}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };

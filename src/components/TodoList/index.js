@@ -3,7 +3,7 @@ import React from 'react';
 import TodoItem from '../TodoItem';
 import './index.css';
 
-const TodoList = ({ tasks, updateTask, deleteTask }) => {
+const TodoList = ({ tasks, updateTask, deleteTask, onEdit }) => {
   return (
     <div className="todo-list">
       <h2>Tasks</h2>
@@ -14,6 +14,7 @@ const TodoList = ({ tasks, updateTask, deleteTask }) => {
             task={task}
             updateTask={updateTask}
             deleteTask={deleteTask}
+            onEdit={onEdit}
           />
         ))}
       </ul>

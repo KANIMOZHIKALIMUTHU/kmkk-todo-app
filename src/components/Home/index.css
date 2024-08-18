@@ -1,40 +1,21 @@
 /* src/components/HomePage.css */
 .home-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
-  .home-page-header {
-    background-color: #007bff;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .home-page-main {
-    display: flex;
-    flex: 1;
-    padding: 20px;
-    gap: 20px;
-  }
-  
-  .task-manager {
-    flex: 3;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .label-manager-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .home-page-footer {
-    background-color: #f8f9fa;
-    text-align: center;
-    padding: 10px;
-    border-top: 1px solid #dee2e6;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f2f5; /* Light background color */
+}
+
+.home-page-header,
+.home-page-footer {
+  text-align: center;
+  padding: 20px;
+}
+
+.home-page-main {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+}
